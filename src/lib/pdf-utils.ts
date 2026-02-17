@@ -1,7 +1,10 @@
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Set worker source to local file in public directory
-pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+// Use Vite's URL import to get the correct worker path
+// @ts-ignore
+import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
 
 export async function convertPdfToImages(file: File): Promise<string[]> {
     const arrayBuffer = await file.arrayBuffer();
@@ -33,3 +36,5 @@ export async function convertPdfToImages(file: File): Promise<string[]> {
 
     return pageImages;
 }
+
+

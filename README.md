@@ -11,6 +11,7 @@ A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool 
 - **🖼️ Image OCR**: Extract text from PNG, JPG, JPEG, and WebP images.
 - **📄 PDF Support**: Full support for multi-page PDF documents. Each page is processed individually.
 - **🚀 Real-time Progress**: Track the OCR progress for each file with visual progress bars.
+- **💾 Download as Text**: download the extracted text as a `.txt` file for easy editing and sharing.
 - **📋 Instant Copy**: Copy extracted text to your clipboard with a single click (includes "Copied!" feedback).
 - **✨ Modern UI**: A clean, responsive interface with smooth animations and dark mode support.
 - **🛠️ Privacy First**: All processing happens locally in your browser using WebAssembly. Your files are never uploaded to a server.
@@ -53,7 +54,7 @@ A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool 
 1. **Upload**: Drag and drop your images or PDF files into the upload area, or click to browse.
 2. **Process**: Once your files are in the queue, click the **"Start OCR"** button.
 3. **Review**: Switch to the **"Results"** tab to view the extracted text side-by-side with the file name.
-4. **Copy**: Click the **"Copy"** button on any result card to quickly copy the text for use elsewhere.
+4. **Copy or Download**: Click the **"Copy"** button to copy text or **"Text"** button to download as a `.txt` file.
 
 ## 🤝 Contributing
 

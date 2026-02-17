@@ -10,6 +10,7 @@ import { recognizeText } from './lib/ocr'; // Corrected import path
 import { FileText, Trash2, CheckCircle, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CopyButton } from './components/CopyButton';
+import { TextDownloadButton } from './components/TextDownloadButton';
 
 type TabValue = 'upload' | 'process' | 'results';
 
@@ -254,6 +255,7 @@ function App() {
                             <p className="text-sm font-medium truncate">{file.file.name}</p>
                           </div>
                           <CopyButton text={file.result?.text || ''} />
+                          <TextDownloadButton text={file.result?.text || ''} filename={file.file.name} />
                         </div>
                         <textarea
                           className="w-full h-48 p-3 text-sm border rounded-md font-mono bg-muted/30 focus:ring-2 focus:ring-primary focus:outline-none resize-none"
@@ -277,7 +279,7 @@ function App() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </div >
   );
 }
 
