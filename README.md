@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# 📄 Smart OCR Tool
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool that allows you to extract text from images and PDF documents instantly. Built with a focus on ease of use, speed, and a premium user experience.
 
-Currently, two official plugins are available:
+![GitHub last commit](https://img.shields.io/github/last-commit/arungupta1526/ocr-tool?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/arungupta1526/ocr-tool?style=for-the-badge)
+![License](https://img.shields.io/github/license/arungupta1526/ocr-tool?style=for-the-badge)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+- **🖼️ Image OCR**: Extract text from PNG, JPG, JPEG, and WebP images.
+- **📄 PDF Support**: Full support for multi-page PDF documents. Each page is processed individually.
+- **🚀 Real-time Progress**: Track the OCR progress for each file with visual progress bars.
+- **📋 Instant Copy**: Copy extracted text to your clipboard with a single click (includes "Copied!" feedback).
+- **✨ Modern UI**: A clean, responsive interface with smooth animations and dark mode support.
+- **🛠️ Privacy First**: All processing happens locally in your browser using WebAssembly. Your files are never uploaded to a server.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Tech Stack
 
-## Expanding the ESLint configuration
+- **Framework**: [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **OCR Engine**: [Tesseract.js](https://tesseract.projectnaptha.com/)
+- **PDF Handling**: [PDF.js](https://mozilla.github.io/pdf.js/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Icons**: [Lucide React](https://lucide.dev/)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Installation & Setup
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/arungupta1526/ocr-tool.git
+   cd ocr-tool
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+3. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+4. **Build for production**:
+   ```bash
+   npm run build
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📖 How to Use
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. **Upload**: Drag and drop your images or PDF files into the upload area, or click to browse.
+2. **Process**: Once your files are in the queue, click the **"Start OCR"** button.
+3. **Review**: Switch to the **"Results"** tab to view the extracted text side-by-side with the file name.
+4. **Copy**: Click the **"Copy"** button on any result card to quickly copy the text for use elsewhere.
+
+## 🤝 Contributing
+
+Contributions are welcome! If you have ideas for improvements or new features, feel free to open an issue or submit a pull request.
+
+## 📜 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+Made with ❤️ by [Arun Gupta](https://github.com/arungupta1526)
