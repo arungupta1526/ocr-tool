@@ -1,10 +1,11 @@
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Use Vite's URL import to get the correct worker path
-// @ts-ignore
+// Vite URL import resolves the correct path for GitHub Pages sub-path deployments
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
+pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl as string;
+
+const OCR_SCALE = 2.0; // Higher scale = better OCR quality at the cost of memory
 
 export async function convertPdfToImages(file: File): Promise<string[]> {
     const arrayBuffer = await file.arrayBuffer();
@@ -12,29 +13,30 @@ export async function convertPdfToImages(file: File): Promise<string[]> {
     const pageImages: string[] = [];
 
     for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 2.0 }); // Scale up for better OCR quality
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
+        try {
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: OCR_SCALE });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
 
-        if (!context) {
-            throw new Error('Canvas context not available');
+            if (!context) {
+                throw new Error('Canvas 2D context not available');
+            }
+
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            await page.render({ canvas, canvasContext: context, viewport }).promise;
+
+            pageImages.push(canvas.toDataURL('image/png'));
+
+            // Release canvas memory after capturing the data URL
+            canvas.width = 0;
+            canvas.height = 0;
+        } catch (err) {
+            console.warn(`Failed to render page ${i}:`, err);
         }
-
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        const renderContext = {
-            canvasContext: context,
-            viewport: viewport,
-        };
-        // @ts-ignore
-        await page.render(renderContext).promise;
-
-        pageImages.push(canvas.toDataURL('image/png'));
     }
 
     return pageImages;
 }
-
-

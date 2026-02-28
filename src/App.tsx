@@ -3,10 +3,10 @@ import { FileUpload } from './components/FileUpload';
 import { Button } from './components/ui/button';
 import { Card, CardContent } from './components/ui/card';
 import { Progress } from './components/ui/progress';
-import { Tabs, TabsTrigger } from './components/ui/tabs'; // Corrected import path
-import type { OCRFile } from './types'; // Corrected import path
-import { convertPdfToImages } from './lib/pdf-utils'; // Corrected import path
-import { recognizeText } from './lib/ocr'; // Corrected import path
+import { Tabs, TabsTrigger } from './components/ui/tabs';
+import type { OCRFile } from './types';
+import { convertPdfToImages } from './lib/pdf-utils';
+import { recognizeText } from './lib/ocr';
 import { FileText, Trash2, CheckCircle, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CopyButton } from './components/CopyButton';
@@ -19,26 +19,13 @@ function App() {
   const [files, setFiles] = useState<OCRFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleFilesSelected = async (selectedFiles: File[]) => {
-    const newFiles: OCRFile[] = await Promise.all(selectedFiles.map(async (file) => {
-      let preview = '';
-      let pages: string[] = [];
-
-      if (file.type === 'application/pdf') {
-        // Placeholder for PDF preview until processed, or just show an icon
-        preview = '';
-      } else {
-        preview = URL.createObjectURL(file);
-      }
-
-      return {
-        id: crypto.randomUUID(),
-        file,
-        preview,
-        status: 'idle',
-        progress: 0,
-        pages
-      };
+  const handleFilesSelected = (selectedFiles: File[]) => {
+    const newFiles: OCRFile[] = selectedFiles.map((file) => ({
+      id: crypto.randomUUID(),
+      file,
+      preview: file.type === 'application/pdf' ? '' : URL.createObjectURL(file),
+      status: 'idle',
+      progress: 0,
     }));
 
     setFiles(prev => [...prev, ...newFiles]);
@@ -46,10 +33,11 @@ function App() {
   };
 
   const removeFile = (id: string) => {
-    setFiles(prev => prev.filter(f => f.id !== id));
-    if (files.length <= 1) {
-      setActiveTab('upload');
-    }
+    setFiles(prev => {
+      const updated = prev.filter(f => f.id !== id);
+      if (updated.length === 0) setActiveTab('upload');
+      return updated;
+    });
   };
 
   const processFiles = async () => {
@@ -249,7 +237,7 @@ function App() {
                       <div key={file.id} className="border p-4 rounded-lg space-y-4">
                         <div className="flex items-center gap-3 mb-2">
                           <div className="h-10 w-10 bg-muted rounded flex items-center justify-center overflow-hidden">
-                            {file.preview ? <img src={file.preview} className="h-full w-full object-cover" /> : <FileText className="h-5 w-5" />}
+                            {file.preview ? <img src={file.preview} alt={file.file.name} className="h-full w-full object-cover" /> : <FileText className="h-5 w-5" />}
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium truncate">{file.file.name}</p>
@@ -260,7 +248,8 @@ function App() {
                         <textarea
                           className="w-full h-48 p-3 text-sm border rounded-md font-mono bg-muted/30 focus:ring-2 focus:ring-primary focus:outline-none resize-none"
                           readOnly
-                          value={file.result?.text}
+                          value={file.result?.text ?? ''}
+                          onChange={() => { }}
                         />
                       </div>
                     ))}

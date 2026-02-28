@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileType, FileText } from 'lucide-react';
+import { Upload, FileText, Image } from 'lucide-react';
 import { cn } from '../lib/utils'; // Corrected import path
 
 interface FileUploadProps {
@@ -45,7 +45,7 @@ export function FileUpload({ onFileSelect, className }: FileUploadProps) {
                     </p>
                 </div>
                 <div className="flex gap-4 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><FileType className="w-4 h-4" /> Images</span>
+                    <span className="flex items-center gap-1"><Image className="w-4 h-4" /> Images</span>
                     <span className="flex items-center gap-1"><FileText className="w-4 h-4" /> PDFs</span>
                 </div>
             </div>

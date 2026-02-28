@@ -8,6 +8,10 @@ interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
 const Progress = forwardRef<HTMLDivElement, ProgressProps>(({ className, value, ...props }, ref) => (
     <div
         ref={ref}
+        role="progressbar"
+        aria-valuenow={value ?? 0}
+        aria-valuemin={0}
+        aria-valuemax={100}
         className={cn('relative h-4 w-full overflow-hidden rounded-full bg-secondary', className)}
         {...props}
     >

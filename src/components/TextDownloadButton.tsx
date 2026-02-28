@@ -1,6 +1,5 @@
 import { Button } from './ui/button';
 import { FileText } from 'lucide-react';
-import { saveAs } from 'file-saver';
 
 interface TextDownloadButtonProps {
     text: string;
@@ -9,9 +8,13 @@ interface TextDownloadButtonProps {
 
 export function TextDownloadButton({ text, filename }: TextDownloadButtonProps) {
     const handleDownload = () => {
-        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-        const saveName = filename.replace(/\.[^/.]+$/, "") + ".txt";
-        saveAs(blob, saveName);
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename.replace(/\.[^/.]+$/, '') + '.txt';
+        a.click();
+        URL.revokeObjectURL(url);
     };
 
     return (
