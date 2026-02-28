@@ -64,6 +64,10 @@ A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool 
 
 Contributions are welcome! If you have ideas for improvements or new features, feel free to open an issue or submit a pull request.
 
+## 🐳 Docker
+
+Want to self-host or run this in a container? See the **[Docker Guide](./DOCKER.md)** for full instructions including Dockerfile, build, run, and Docker Compose setup.
+
 ## 📜 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
