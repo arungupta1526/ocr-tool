@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { FileUpload } from './components/FileUpload';
 import { Button } from './components/ui/button';
 import { Card, CardContent } from './components/ui/card';
@@ -7,7 +7,7 @@ import { Tabs, TabsTrigger } from './components/ui/tabs';
 import type { OCRFile } from './types';
 import { convertPdfToImages } from './lib/pdf-utils';
 import { recognizeText } from './lib/ocr';
-import { FileText, Trash2, CheckCircle, Loader2 } from 'lucide-react';
+import { FileText, Trash2, CheckCircle, Loader2, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CopyButton } from './components/CopyButton';
 import { TextDownloadButton } from './components/TextDownloadButton';
@@ -18,6 +18,8 @@ function App() {
   const [activeTab, setActiveTab] = useState<TabValue>('upload');
   const [files, setFiles] = useState<OCRFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  // Map from file ID → AbortController, so we can cancel individual files
+  const abortControllers = useRef<Map<string, AbortController>>(new Map());
 
   const handleFilesSelected = (selectedFiles: File[]) => {
     const newFiles: OCRFile[] = selectedFiles.map((file) => ({
@@ -40,14 +42,21 @@ function App() {
     });
   };
 
+  const cancelFile = (id: string) => {
+    const controller = abortControllers.current.get(id);
+    controller?.abort();
+  };
+
   const processFiles = async () => {
     setIsProcessing(true);
 
-    // Process files sequentially or parallel? Let's do parallel for now but with limit if needed.
-    // For simplicity, just parallel map.
-
     const processedFiles = await Promise.all(files.map(async (ocrFile) => {
       if (ocrFile.status === 'success') return ocrFile;
+
+      // Create a fresh AbortController for this file
+      const controller = new AbortController();
+      abortControllers.current.set(ocrFile.id, controller);
+      const { signal } = controller;
 
       try {
         setFiles(prev => prev.map(f => f.id === ocrFile.id ? { ...f, status: 'processing', progress: 0 } : f));
@@ -55,11 +64,10 @@ function App() {
         let imagesToProcess: string[] = [];
 
         if (ocrFile.file.type === 'application/pdf') {
-          // Convert PDF to images first
-          setFiles(prev => prev.map(f => f.id === ocrFile.id ? { ...f, status: 'processing', progress: 10 } : f)); // fake progress for pdf conversion
+          setFiles(prev => prev.map(f => f.id === ocrFile.id ? { ...f, status: 'processing', progress: 10 } : f));
           const images = await convertPdfToImages(ocrFile.file);
+          if (signal.aborted) throw new DOMException('Cancelled', 'AbortError');
           imagesToProcess = images;
-          // Update file with pages for preview
           setFiles(prev => prev.map(f => f.id === ocrFile.id ? { ...f, pages: images, preview: images[0] } : f));
         } else {
           imagesToProcess = [ocrFile.preview];
@@ -69,38 +77,40 @@ function App() {
         const totalImages = imagesToProcess.length;
 
         for (let i = 0; i < totalImages; i++) {
+          if (signal.aborted) throw new DOMException('Cancelled', 'AbortError');
+
           const result = await recognizeText(imagesToProcess[i], (progress) => {
-            // Update progress relative to total pages
             const currentImageBaseProgress = (i / totalImages) * 100;
             const imageProgress = (progress / 100) * (1 / totalImages) * 100;
             const totalProgress = currentImageBaseProgress + imageProgress;
-
             setFiles(prev => prev.map(f => f.id === ocrFile.id ? { ...f, progress: Math.round(totalProgress) } : f));
           });
           fullText += result.text + '\n\n';
         }
 
+        abortControllers.current.delete(ocrFile.id);
         return {
           ...ocrFile,
           status: 'success' as const,
           progress: 100,
-          result: { text: fullText, confidence: 100 }, // Average confidence could be calculated
+          result: { text: fullText, confidence: 100 },
           pages: imagesToProcess
         };
 
       } catch (error) {
+        abortControllers.current.delete(ocrFile.id);
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return { ...ocrFile, status: 'cancelled' as const, progress: 0 };
+        }
         console.error(error);
-        return {
-          ...ocrFile,
-          status: 'error' as const,
-          error: 'Failed to process file'
-        };
+        return { ...ocrFile, status: 'error' as const, error: 'Failed to process file' };
       }
     }));
 
     setFiles(processedFiles);
     setIsProcessing(false);
-    setActiveTab('results');
+    // Only switch to results if at least one succeeded
+    if (processedFiles.some(f => f.status === 'success')) setActiveTab('results');
   };
 
 
@@ -207,14 +217,28 @@ function App() {
                               {file.status === 'idle' && 'Ready to process'}
                               {file.status === 'processing' && 'Processing...'}
                               {file.status === 'success' && 'Completed'}
+                              {file.status === 'cancelled' && <span className="text-orange-500">Cancelled</span>}
                               {file.status === 'error' && <span className="text-destructive">Error</span>}
                             </span>
                             <span>{Math.round(file.progress)}%</span>
                           </div>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => removeFile(file.id)} disabled={isProcessing}>
-                          <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
-                        </Button>
+                        {/* Cancel button when processing, delete otherwise */}
+                        {file.status === 'processing' ? (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => cancelFile(file.id)}
+                            title="Cancel processing"
+                            className="text-orange-500 hover:text-orange-700 hover:bg-orange-50"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        ) : (
+                          <Button variant="ghost" size="icon" onClick={() => removeFile(file.id)} disabled={isProcessing}>
+                            <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                          </Button>
+                        )}
                       </div>
                     ))}
                   </div>

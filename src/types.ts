@@ -1,4 +1,4 @@
-export type OCRStatus = 'idle' | 'processing' | 'success' | 'error';
+export type OCRStatus = 'idle' | 'processing' | 'success' | 'error' | 'cancelled';
 
 export interface OCRResult {
     text: string;
