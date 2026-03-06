@@ -7,10 +7,12 @@ import { Tabs, TabsTrigger } from './components/ui/tabs';
 import type { OCRFile } from './types';
 import { convertPdfToImages } from './lib/pdf-utils';
 import { recognizeText } from './lib/ocr';
-import { FileText, Trash2, CheckCircle, Loader2, X } from 'lucide-react';
+import { FileText, Trash2, CheckCircle, Loader2, X, Moon, Sun } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CopyButton } from './components/CopyButton';
 import { TextDownloadButton } from './components/TextDownloadButton';
+import { Footer } from './components/Footer';
+import { useDarkMode } from './hooks/useDarkMode';
 
 type TabValue = 'upload' | 'process' | 'results';
 
@@ -18,8 +20,8 @@ function App() {
   const [activeTab, setActiveTab] = useState<TabValue>('upload');
   const [files, setFiles] = useState<OCRFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  // Map from file ID → AbortController, so we can cancel individual files
   const abortControllers = useRef<Map<string, AbortController>>(new Map());
+  const { isDark, toggle: toggleDark } = useDarkMode();
 
   const handleFilesSelected = (selectedFiles: File[]) => {
     const newFiles: OCRFile[] = selectedFiles.map((file) => ({
@@ -120,7 +122,16 @@ function App() {
       <div className="max-w-5xl mx-auto space-y-8">
 
         {/* Header */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-2 relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleDark}
+            className="absolute right-0 top-0"
+            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
             Smart OCR
           </h1>
@@ -292,7 +303,8 @@ function App() {
           </CardContent>
         </Card>
       </div>
-    </div >
+      <Footer />
+    </div>
   );
 }
 

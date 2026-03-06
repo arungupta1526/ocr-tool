@@ -6,7 +6,7 @@ A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool 
 ![GitHub repo size](https://img.shields.io/github/repo-size/arungupta1526/ocr-tool?style=for-the-badge)
 ![License](https://img.shields.io/github/license/arungupta1526/ocr-tool?style=for-the-badge)
 
-🔗 **[Live Demo](https://arungupta1526.github.io/ocr-tool/)**
+🌐 **Live Demo**: [arungupta1526.github.io/ocr-tool/](https://arungupta1526.github.io/ocr-tool/)
 
 ## ✨ Features
 
