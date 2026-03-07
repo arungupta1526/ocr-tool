@@ -1,3 +1,10 @@
+/**
+ * Smart OCR Tool
+ * Copyright (c) 2026 Arun Gupta
+ * Licensed under the MIT License.
+ * See LICENSE file in the project root for details.
+ */
+
 import Tesseract from 'tesseract.js';
 
 function loadImage(src: string): Promise<HTMLImageElement> {

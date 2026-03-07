@@ -1,4 +1,12 @@
+/**
+ * Smart OCR Tool
+ * Copyright (c) 2026 Arun Gupta
+ * Licensed under the MIT License.
+ * See LICENSE file in the project root for details.
+ */
+
 import * as pdfjsLib from 'pdfjs-dist';
+import { preprocessCanvas } from "./preprocess";
 
 // Vite URL import resolves the correct path for GitHub Pages sub-path deployments
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
@@ -35,10 +43,9 @@ export async function convertPdfToImages(file: File): Promise<string[]> {
             const pCtx = processedCanvas.getContext('2d');
 
             if (pCtx) {
-                // Remove color noise and boldly emphasize text edges
-                pCtx.filter = 'grayscale(100%) contrast(150%)';
                 pCtx.drawImage(canvas, 0, 0);
-                pageImages.push(processedCanvas.toDataURL('image/png'));
+                const cleaned = preprocessCanvas(processedCanvas);
+                pageImages.push(cleaned.toDataURL("image/png"));
             } else {
                 // Fallback if 2d context fails
                 pageImages.push(canvas.toDataURL('image/png'));

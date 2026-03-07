@@ -1,3 +1,10 @@
+/**
+ * Smart OCR Tool
+ * Copyright (c) 2026 Arun Gupta
+ * Licensed under the MIT License.
+ * See LICENSE file in the project root for details.
+ */
+
 import { useState, useRef } from 'react';
 import { FileUpload } from './components/FileUpload';
 import { Button } from './components/ui/button';
@@ -81,6 +88,7 @@ function App() {
         }
 
         let fullText = '';
+        let avgConfidence = 0;
         const totalImages = imagesToProcess.length;
 
         for (let i = 0; i < totalImages; i++) {
@@ -90,10 +98,18 @@ function App() {
             const currentImageBaseProgress = (i / totalImages) * 100;
             const imageProgress = (progress / 100) * (1 / totalImages) * 100;
             const totalProgress = currentImageBaseProgress + imageProgress;
-            setFiles(prev => prev.map(f => f.id === ocrFile.id ? { ...f, progress: Math.round(totalProgress) } : f));
+            setFiles(prev =>
+              prev.map(f =>
+                f.id === ocrFile.id ? { ...f, progress: Math.round(totalProgress) } : f
+              )
+            );
           });
+
           fullText += result.text + '\n\n';
+          avgConfidence += result.confidence;
         }
+
+        avgConfidence = avgConfidence / totalImages;
 
         abortControllers.current.delete(ocrFile.id);
         return {
@@ -102,7 +118,8 @@ function App() {
           progress: 100,
           result: {
             text: fullText,
-            confidence: 100,
+            // confidence: 100,
+            confidence: avgConfidence,
             lang: selectedLang,
             columns: selectedColumns
           },
