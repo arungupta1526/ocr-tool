@@ -1,11 +1,11 @@
-import { Github, Mail } from 'lucide-react';
+import { Github, Linkedin } from 'lucide-react';
 
 export function Footer() {
     return (
         <footer className="mt-8 pb-6 text-center text-sm text-muted-foreground space-y-2">
             <div className="flex items-center justify-center gap-4">
                 <a
-                    href="https://github.com/arungupta1526"
+                    href="https://github.com/arungupta1526/ocr-tool/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1.5 hover:text-foreground transition-colors"
@@ -15,10 +15,12 @@ export function Footer() {
                 </a>
                 <span className="text-border">|</span>
                 <a
-                    href="mailto:arungupta1526@gmail.com"
+                    href="https://www.linkedin.com/in/arungupta1526/"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-1.5 hover:text-foreground transition-colors"
                 >
-                    <Mail className="h-4 w-4" />
+                    <Linkedin className="h-4 w-4" />
                     <span>Contact</span>
                 </a>
             </div>
