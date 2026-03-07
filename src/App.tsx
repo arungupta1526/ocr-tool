@@ -14,6 +14,8 @@ import { TextDownloadButton } from './components/TextDownloadButton';
 import { Footer } from './components/Footer';
 import { useDarkMode } from './hooks/useDarkMode';
 import { LanguageSelector } from './components/LanguageSelector';
+import { LayoutSelector } from './components/LayoutSelector';
+// import { LANGUAGES } from './lib/languages';
 
 type TabValue = 'upload' | 'process' | 'results';
 
@@ -22,6 +24,7 @@ function App() {
   const [files, setFiles] = useState<OCRFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedLang, setSelectedLang] = useState('eng');
+  const [selectedColumns, setSelectedColumns] = useState(1);
   const abortControllers = useRef<Map<string, AbortController>>(new Map());
   const { isDark, toggle: toggleDark } = useDarkMode();
 
@@ -83,7 +86,7 @@ function App() {
         for (let i = 0; i < totalImages; i++) {
           if (signal.aborted) throw new DOMException('Cancelled', 'AbortError');
 
-          const result = await recognizeText(imagesToProcess[i], selectedLang, (progress) => {
+          const result = await recognizeText(imagesToProcess[i], selectedLang, selectedColumns, (progress) => {
             const currentImageBaseProgress = (i / totalImages) * 100;
             const imageProgress = (progress / 100) * (1 / totalImages) * 100;
             const totalProgress = currentImageBaseProgress + imageProgress;
@@ -97,7 +100,12 @@ function App() {
           ...ocrFile,
           status: 'success' as const,
           progress: 100,
-          result: { text: fullText, confidence: 100 },
+          result: {
+            text: fullText,
+            confidence: 100,
+            lang: selectedLang,
+            columns: selectedColumns
+          },
           pages: imagesToProcess
         };
 
@@ -198,7 +206,12 @@ function App() {
                 >
                   <div className="flex flex-wrap justify-between items-center gap-3">
                     <h2 className="text-2xl font-semibold">Processing Queue</h2>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-wrap justify-end">
+                      <LayoutSelector
+                        value={selectedColumns}
+                        onChange={setSelectedColumns}
+                        disabled={isProcessing}
+                      />
                       <LanguageSelector
                         value={selectedLang}
                         onChange={setSelectedLang}
@@ -272,7 +285,7 @@ function App() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full"
+                  className="grid grid-cols-1 md:grid-cols-[7fr_3fr] gap-6 h-full"
                 >
                   {/* File List / Preview Side */}
                   <div className="space-y-4 overflow-y-auto pr-2">
@@ -285,6 +298,7 @@ function App() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium truncate">{file.file.name}</p>
+                            <p className="text-xs text-muted-foreground">{file.result?.columns} columns | {file.result?.lang}</p>
                           </div>
                           <CopyButton text={file.result?.text || ''} />
                           <TextDownloadButton text={file.result?.text || ''} filename={file.file.name} />

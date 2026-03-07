@@ -54,6 +54,7 @@ View, copy, or download the extracted text after processing.
 - **🖼️ Image OCR**: Extract text from PNG, JPG, JPEG, and WebP images.
 - **📄 PDF Support**: Full support for multi-page PDF documents. Each page is processed individually.
 - **🌍 Multi-Language Support**: Run OCR in 12 different languages (English, Hindi, Arabic, French, German, Chinese, etc.).
+- **📰 Multi-Column Layouts**: Perfectly extract text from 2-sided or 3-column PDFs/images by preserving reading order.
 - **🚀 Real-time Progress**: Track the OCR progress for each file with visual progress bars.
 - **⛔ Cancel Processing**: Cancel any individual file's OCR mid-way without stopping others.
 - **💾 Download as Text**: Download the extracted text as a `.txt` file for easy editing and sharing.
@@ -67,10 +68,10 @@ Smart OCR Tool runs entirely in the browser with no backend.
 
 ### Processing Flow
 
-User Upload → Select Language → File Queue → OCR Engine → Extracted Text
+User Upload → Select Language & Layout → File Queue → OCR Engine → Extracted Text
 
 1. User uploads images or PDFs.
-2. User selects desired OCR language (e.g., English, Hindi).
+2. User selects desired OCR language (e.g., English, Hindi) and Column Layout (1, 2, or 3 columns).
 3. Files enter a processing queue.
 4. If a file is a PDF:
    - PDF.js renders pages to a canvas.
@@ -143,7 +144,7 @@ All OCR runs locally using WebAssembly, eliminating network latency and ensuring
 ## 📖 How to Use
 
 1. **Upload**: Drag and drop your images or PDF files into the upload area, or click to browse.
-2. **Language**: Select your document's language from the "OCR Language" dropdown (e.g., English, Hindi, Tamil).
+2. **Language & Layout**: Select your language and the document's column layout (1, 2, or 3 columns) before processing.
 3. **Process**: Once your files are in the queue, click the **"Start OCR"** button.
 4. **Cancel** *(optional)*: Click the **✕** button next to any file to cancel its processing individually.
 5. **Review**: Switch to the **"Results"** tab to view the extracted text for each file.
