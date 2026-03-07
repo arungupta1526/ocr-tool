@@ -18,6 +18,7 @@ A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool 
     - [Extracted Text Results](#extracted-text-results)
   - [✨ Features](#-features)
   - [🏗 Architecture](#-architecture)
+    - [Architecture Diagram](#architecture-diagram)
     - [Processing Flow](#processing-flow)
   - [⚡ Performance Considerations](#-performance-considerations)
     - [Per-File Abort Control](#per-file-abort-control)
@@ -31,6 +32,7 @@ A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool 
   - [🤝 Contributing](#-contributing)
   - [🐳 Docker](#-docker)
   - [📜 License](#-license)
+  - [📞 Commercial Support](#-commercial-support)
 
 ## 📸 Screenshots
 
@@ -65,6 +67,18 @@ View, copy, or download the extracted text after processing.
 ## 🏗 Architecture
 
 Smart OCR Tool runs entirely in the browser with no backend.
+
+### Architecture Diagram
+
+```
+Browser UI (React)
+        ↓
+PDF.js → Canvas
+        ↓
+Tesseract.js (WASM OCR)
+        ↓
+Extracted Text
+```
 
 ### Processing Flow
 
@@ -168,7 +182,14 @@ Want to self-host or run this in a container? See the **[Docker Guide](./DOCKER.
 
 ## 📜 License
 
+Copyright (c) 2026 Arun Gupta
+
 Distributed under the MIT License. See `LICENSE` for more information.
+
+## 📞 Commercial Support
+
+If your company needs custom OCR features, integrations, accuracy improvements or enterprise use:
+Contact: <a href="mailto:arungupta1526@gmail.com" target="_blank">arungupta1526@gmail.com</a> or <a href="https://linkedin.com/in/arungupta1526" target="_blank">LinkedIn</a>
 
 ---
 
