@@ -2,12 +2,13 @@ import Tesseract from 'tesseract.js';
 
 export async function recognizeText(
     imagePath: string,
+    lang: string,
     onProgress?: (progress: number) => void
 ): Promise<{ text: string; confidence: number }> {
 
     const result = await Tesseract.recognize(
         imagePath,
-        'eng',
+        lang,
         {
             logger: m => {
                 if (m.status === 'recognizing text') {

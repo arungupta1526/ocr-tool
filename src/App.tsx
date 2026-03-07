@@ -13,6 +13,7 @@ import { CopyButton } from './components/CopyButton';
 import { TextDownloadButton } from './components/TextDownloadButton';
 import { Footer } from './components/Footer';
 import { useDarkMode } from './hooks/useDarkMode';
+import { LanguageSelector } from './components/LanguageSelector';
 
 type TabValue = 'upload' | 'process' | 'results';
 
@@ -20,6 +21,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<TabValue>('upload');
   const [files, setFiles] = useState<OCRFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedLang, setSelectedLang] = useState('eng');
   const abortControllers = useRef<Map<string, AbortController>>(new Map());
   const { isDark, toggle: toggleDark } = useDarkMode();
 
@@ -81,7 +83,7 @@ function App() {
         for (let i = 0; i < totalImages; i++) {
           if (signal.aborted) throw new DOMException('Cancelled', 'AbortError');
 
-          const result = await recognizeText(imagesToProcess[i], (progress) => {
+          const result = await recognizeText(imagesToProcess[i], selectedLang, (progress) => {
             const currentImageBaseProgress = (i / totalImages) * 100;
             const imageProgress = (progress / 100) * (1 / totalImages) * 100;
             const totalProgress = currentImageBaseProgress + imageProgress;
@@ -194,17 +196,24 @@ function App() {
                   transition={{ duration: 0.2 }}
                   className="space-y-6 h-full overflow-y-auto pr-4"
                 >
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-wrap justify-between items-center gap-3">
                     <h2 className="text-2xl font-semibold">Processing Queue</h2>
-                    <Button onClick={processFiles} disabled={isProcessing} size="lg">
-                      {isProcessing ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...
-                        </>
-                      ) : (
-                        'Start OCR'
-                      )}
-                    </Button>
+                    <div className="flex items-center gap-3">
+                      <LanguageSelector
+                        value={selectedLang}
+                        onChange={setSelectedLang}
+                        disabled={isProcessing}
+                      />
+                      <Button onClick={processFiles} disabled={isProcessing} size="lg">
+                        {isProcessing ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...
+                          </>
+                        ) : (
+                          'Start OCR'
+                        )}
+                      </Button>
+                    </div>
                   </div>
 
                   <div className="grid gap-4">

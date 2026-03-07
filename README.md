@@ -8,6 +8,46 @@ A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool 
 
 🌐 **Live Demo**: [arungupta1526.github.io/ocr-tool/](https://arungupta1526.github.io/ocr-tool/)
 
+## 📚 Table of Contents
+
+- [📄 Smart OCR Tool](#-smart-ocr-tool)
+  - [📸 Screenshots](#-screenshots)
+    - [Upload Interface](#upload-interface)
+    - [OCR Processing](#ocr-processing)
+    - [Extracted Text Results](#extracted-text-results)
+  - [✨ Features](#-features)
+  - [🏗 Architecture](#-architecture)
+    - [Processing Flow](#processing-flow)
+  - [⚡ Performance Considerations](#-performance-considerations)
+    - [Per-File Abort Control](#per-file-abort-control)
+    - [High Resolution Rendering](#high-resolution-rendering)
+    - [Memory Management](#memory-management)
+    - [Local Processing](#local-processing)
+  - [🚀 Tech Stack](#-tech-stack)
+  - [🛠️ Installation \& Setup](#️-installation--setup)
+  - [📖 How to Use](#-how-to-use)
+  - [🎯 Use Cases](#-use-cases)
+  - [🤝 Contributing](#-contributing)
+  - [🐳 Docker](#-docker)
+  - [📜 License](#-license)
+
+## 📸 Screenshots
+
+### Upload Interface
+Users can drag and drop images or PDF files directly into the upload area.
+
+![Upload UI](./screenshots/upload.png)
+
+### OCR Processing
+Real-time progress tracking for each file being processed.
+
+![Processing](./screenshots/progress.png)
+
+### Extracted Text Results
+View, copy, or download the extracted text after processing.
+
+![Results](./screenshots/results.png)
+
 ## ✨ Features
 
 - **🖼️ Image OCR**: Extract text from PNG, JPG, JPEG, and WebP images.
@@ -18,6 +58,51 @@ A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool 
 - **📋 Instant Copy**: Copy extracted text to your clipboard with a single click (includes "Copied!" feedback).
 - **✨ Modern UI**: A clean, responsive interface with smooth animations and dark mode support.
 - **🛠️ Privacy First**: All processing happens locally in your browser using WebAssembly. Your files are never uploaded to a server.
+
+## 🏗 Architecture
+
+Smart OCR Tool runs entirely in the browser with no backend.
+
+### Processing Flow
+
+User Upload → File Queue → OCR Engine → Extracted Text
+
+1. User uploads images or PDFs.
+2. Files enter a processing queue.
+3. If a file is a PDF:
+   - PDF.js renders pages to a canvas.
+4. Canvas images are passed to Tesseract.js.
+5. Tesseract performs OCR using WebAssembly.
+6. Extracted text is displayed in the results panel.
+
+```
+User File
+   ↓
+Upload Queue
+   ↓
+PDF.js Rendering
+   ↓
+Canvas Image
+   ↓
+Tesseract.js OCR
+   ↓
+Extracted Text
+```
+
+## ⚡ Performance Considerations
+
+### Per-File Abort Control
+Each OCR job uses an `AbortController` so individual files can be cancelled without stopping the entire queue.
+
+### High Resolution Rendering
+PDF pages are rendered at **2× scale** before OCR to improve recognition accuracy.
+
+### Memory Management
+Canvas bitmaps are released after processing each page to avoid memory leaks when processing large PDFs.
+
+### Local Processing
+All OCR runs locally using WebAssembly, eliminating network latency and ensuring full privacy.
+
 
 ## 🚀 Tech Stack
 
@@ -59,6 +144,14 @@ A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool 
 3. **Cancel** *(optional)*: Click the **✕** button next to any file to cancel its processing individually.
 4. **Review**: Switch to the **"Results"** tab to view the extracted text for each file.
 5. **Copy or Download**: Click **"Copy"** to copy text to clipboard, or **"Text"** to download as a `.txt` file.
+
+## 🎯 Use Cases
+
+- Extract text from scanned documents
+- Convert image-based PDFs to editable text
+- Quickly copy text from screenshots
+- OCR for research papers or notes
+
 
 ## 🤝 Contributing
 
