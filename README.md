@@ -1,6 +1,6 @@
 # 📄 Smart OCR Tool
 
-A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool that allows you to extract text from images and PDF documents instantly. Built with a focus on ease of use, speed, and a premium user experience.
+A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool that allows you to extract text from images and PDF documents instantly. Supports 12 languages including English, Hindi, and Arabic. Built with a focus on ease of use, speed, and a premium user experience.
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/arungupta1526/ocr-tool?style=for-the-badge)
 ![GitHub repo size](https://img.shields.io/github/repo-size/arungupta1526/ocr-tool?style=for-the-badge)
@@ -11,6 +11,7 @@ A modern, fast, and powerful web-based OCR (Optical Character Recognition) tool 
 ## 📚 Table of Contents
 
 - [📄 Smart OCR Tool](#-smart-ocr-tool)
+  - [📚 Table of Contents](#-table-of-contents)
   - [📸 Screenshots](#-screenshots)
     - [Upload Interface](#upload-interface)
     - [OCR Processing](#ocr-processing)
@@ -52,6 +53,7 @@ View, copy, or download the extracted text after processing.
 
 - **🖼️ Image OCR**: Extract text from PNG, JPG, JPEG, and WebP images.
 - **📄 PDF Support**: Full support for multi-page PDF documents. Each page is processed individually.
+- **🌍 Multi-Language Support**: Run OCR in 12 different languages (English, Hindi, Arabic, French, German, Chinese, etc.).
 - **🚀 Real-time Progress**: Track the OCR progress for each file with visual progress bars.
 - **⛔ Cancel Processing**: Cancel any individual file's OCR mid-way without stopping others.
 - **💾 Download as Text**: Download the extracted text as a `.txt` file for easy editing and sharing.
@@ -65,15 +67,16 @@ Smart OCR Tool runs entirely in the browser with no backend.
 
 ### Processing Flow
 
-User Upload → File Queue → OCR Engine → Extracted Text
+User Upload → Select Language → File Queue → OCR Engine → Extracted Text
 
 1. User uploads images or PDFs.
-2. Files enter a processing queue.
-3. If a file is a PDF:
+2. User selects desired OCR language (e.g., English, Hindi).
+3. Files enter a processing queue.
+4. If a file is a PDF:
    - PDF.js renders pages to a canvas.
-4. Canvas images are passed to Tesseract.js.
-5. Tesseract performs OCR using WebAssembly.
-6. Extracted text is displayed in the results panel.
+5. Canvas images are passed to Tesseract.js.
+6. Tesseract performs OCR using WebAssembly.
+7. Extracted text is displayed in the results panel.
 
 ```
 User File
@@ -140,10 +143,11 @@ All OCR runs locally using WebAssembly, eliminating network latency and ensuring
 ## 📖 How to Use
 
 1. **Upload**: Drag and drop your images or PDF files into the upload area, or click to browse.
-2. **Process**: Once your files are in the queue, click the **"Start OCR"** button.
-3. **Cancel** *(optional)*: Click the **✕** button next to any file to cancel its processing individually.
-4. **Review**: Switch to the **"Results"** tab to view the extracted text for each file.
-5. **Copy or Download**: Click **"Copy"** to copy text to clipboard, or **"Text"** to download as a `.txt` file.
+2. **Language**: Select your document's language from the "OCR Language" dropdown (e.g., English, Hindi, Tamil).
+3. **Process**: Once your files are in the queue, click the **"Start OCR"** button.
+4. **Cancel** *(optional)*: Click the **✕** button next to any file to cancel its processing individually.
+5. **Review**: Switch to the **"Results"** tab to view the extracted text for each file.
+6. **Copy or Download**: Click **"Copy"** to copy text to clipboard, or **"Text"** to download as a `.txt` file.
 
 ## 🎯 Use Cases
 
