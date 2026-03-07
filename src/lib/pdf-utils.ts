@@ -5,7 +5,7 @@ import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl as string;
 
-const OCR_SCALE = 2.0; // Higher scale = better OCR quality at the cost of memory
+const OCR_SCALE = 3.0; // Increased to 3.0 to give Tesseract more detail for special characters
 
 export async function convertPdfToImages(file: File): Promise<string[]> {
     const arrayBuffer = await file.arrayBuffer();
@@ -28,7 +28,21 @@ export async function convertPdfToImages(file: File): Promise<string[]> {
 
             await page.render({ canvas, canvasContext: context, viewport }).promise;
 
-            pageImages.push(canvas.toDataURL('image/png'));
+            // Apply Image Preprocessing (Grayscale + High Contrast)
+            const processedCanvas = document.createElement('canvas');
+            processedCanvas.width = canvas.width;
+            processedCanvas.height = canvas.height;
+            const pCtx = processedCanvas.getContext('2d');
+
+            if (pCtx) {
+                // Remove color noise and boldly emphasize text edges
+                pCtx.filter = 'grayscale(100%) contrast(150%)';
+                pCtx.drawImage(canvas, 0, 0);
+                pageImages.push(processedCanvas.toDataURL('image/png'));
+            } else {
+                // Fallback if 2d context fails
+                pageImages.push(canvas.toDataURL('image/png'));
+            }
 
             // Release canvas memory after capturing the data URL
             canvas.width = 0;
